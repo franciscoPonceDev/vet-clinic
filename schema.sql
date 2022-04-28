@@ -33,3 +33,26 @@ ADD
     COLUMN species_id INT references species(id),
 ADD
     COLUMN owner_id INT references owners(id);
+
+CREATE TABLE vets(
+    id serial PRIMARY KEY,
+    name VARCHAR(100),
+    age INT,
+    date_of_graduation DATE
+);
+
+CREATE TABLE specializations(
+    species_id INT,
+    vet_id INT,
+    FOREIGN KEY(species_id) references species(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(vet_id) references vets(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    PRIMARY KEY (species_id, vet_id)
+);
+
+CREATE TABLE visits(
+    animal_id INT,
+    vet_id INT,
+    date DATE,
+    FOREIGN KEY(animal_id) references animals(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(vet_id) references vets(id) ON DELETE SET NULL ON UPDATE CASCADE
+);
