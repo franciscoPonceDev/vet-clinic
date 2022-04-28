@@ -2,7 +2,7 @@
 
 CREATE TABLE animals
 (
-    id integer NOT NULL,
+    id int NOT NULL IDENTITY(1,1),
     name character varying(100) NOT NULL,
     date_of_birth date,
     escape_attempts integer DEFAULT 0,
