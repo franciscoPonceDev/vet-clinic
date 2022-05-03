@@ -1,58 +1,59 @@
-/* Database schema to keep the structure of entire database. */
-
-CREATE TABLE animals
-(
-    id int NOT NULL IDENTITY(1,1),
-    name character varying(100) NOT NULL,
-    date_of_birth date,
-    escape_attempts integer DEFAULT 0,
-    neutered boolean,
-    weight_kg numeric,
-    PRIMARY KEY (id)
-);
-
-ALTER TABLE IF EXISTS animals
-    ADD COLUMN species character varying;
-
 CREATE TABLE owners(
-    id serial PRIMARY KEY,
-    full_name character varying(100),
-    age INT
+  id INT GENERATED ALWAYS AS IDENTITY,
+  full_name VARCHAR(20),
+  age INT,
+  PRIMARY KEY(id)
 );
 
 CREATE TABLE species(
-    id serial PRIMARY KEY,
-    name character varying(100)
+  id INT GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(20),
+  PRIMARY KEY(id)
 );
 
-ALTER TABLE
-    animals
-DROP 
-    COLUMN species,
-ADD
-    COLUMN species_id INT references species(id),
-ADD
-    COLUMN owner_id INT references owners(id);
+CREATE TABLE animals(
+  id INT GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(20),
+  date_of_birth DATE,
+  escape_attempts INT,
+  neutered BOOLEAN,
+  weight_kg DECIMAL,
+  species_id INT REFERENCES species(id),
+  owner_id INT REFERENCES owners(id),
+  PRIMARY KEY(id)
+);
 
 CREATE TABLE vets(
-    id serial PRIMARY KEY,
-    name VARCHAR(100),
-    age INT,
-    date_of_graduation DATE
+  id INT GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(20),
+  age INT,
+  date_of_graduation DATE,
+  PRIMARY KEY(id)
 );
 
 CREATE TABLE specializations(
-    species_id INT,
-    vet_id INT,
-    FOREIGN KEY(species_id) references species(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(vet_id) references vets(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    PRIMARY KEY (species_id, vet_id)
+  id INT GENERATED ALWAYS AS IDENTITY,
+  species_id INT REFERENCES species(id),
+  vet_id INT REFERENCES vets(id),
+  PRIMARY KEY(id)
 );
 
 CREATE TABLE visits(
-    animal_id INT,
-    vet_id INT,
-    date DATE,
-    FOREIGN KEY(animal_id) references animals(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY(vet_id) references vets(id) ON DELETE SET NULL ON UPDATE CASCADE
+  id INT GENERATED ALWAYS AS IDENTITY,
+  animal_id INT REFERENCES animals(id),
+  vet_id INT REFERENCES vets(id),
+  date_of_visit DATE,
+  PRIMARY KEY(id)
 );
+
+ALTER TABLE owners ADD COLUMN email VARCHAR(120);
+
+CREATE INDEX visits_animals_index ON visits(animal_id);
+EXPLAIN ANALYZE SELECT COUNT(*) FROM visits where animal_id = 4;
+
+CREATE INDEX visits_vets_index ON visitis(vet_id)
+EXPLAIN ANALYZE SELECT * FROM visits where vet_id = 2;
+
+CREATE INDEX owners_email_index ON owners(email);
+EXPLAIN ANALYZE SELECT * FROM owners where email = 'owner_18327@mail.com';
+
