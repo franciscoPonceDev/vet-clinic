@@ -1,7 +1,8 @@
 # curriculum-databases-projects-template
 
-> This template should be used for database related projects at Microverse.
-> Generate your own repository, update this README and edit all files content while working on projects. You should not be adding any new files unless asked otherwise.
+> This is the database for a vet clinic. Using SQl the DB created is visualized in the diagram below:
+![Untitled (1)](https://user-images.githubusercontent.com/93161838/166504010-dbac2461-f2db-4718-b915-b18e656753d4.png)
+
 
 
 ## Getting Started
